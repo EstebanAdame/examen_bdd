@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+
+    <title>Hello, world!</title>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">Navbar</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="http://localhost:1337/consultaUsuario">Usuarios</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="http://localhost:1337/consultaProducto">Productos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="http://localhost:1337/consultaPedido">Pedidos</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <div class="card border-secondary">
+        <div class="card-header">Nuevo registro</div>
+        <div class="card-body">
+            <form action="/saveUsuario" method="POST">
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre" tabindex="1">
+                </div>
+                <div class="mb-3">
+                    <label for="apellidoPaterno" class="form-label">Apellido Paterno</label>
+                    <input type="text" class="form-control" id="apellidoPaterno" name="apellidoPaterno" tabindex="2">
+                </div>
+                <div class="mb-3">
+                    <label for="apellidoMaterno" class="form-label">Apellido Materno</label>
+                    <input type="text" class="form-control" id="apellidoMaterno" name="apellidoMaterno" tabindex="3">
+                </div>
+                <div class="mb-3">
+                    <label for="correo" class="form-label">Correo</label>
+                    <input type="text" class="form-control" id="correo" name="correo" tabindex="4">
+                </div>
+                <div class="mb-3">
+                    <label for="estado" class="form-label">Estado</label>
+                    <input type="text" class="form-control" id="estado" name="estado" tabindex="5">
+                </div>
+                <button type="submit" class="btn btn-primary" tabindex="6">Guardar</button>
+                <a href="/consultaUsuario" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+</body>
+</html>
