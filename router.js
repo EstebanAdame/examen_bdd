@@ -23,9 +23,9 @@ router.get('/saveUsuario', (req, res)=>{
 });
 router.post('/saveUsuario', crud.saveUsuario);
 router.post('/editUsuario', crud.editUsuario);
-router.get('/editUsuario/:idcliente', (req,res)=>{
-    const idcliente = req.params.idcliente;
-    conexion.query('SELECT * FROM usuario WHERE idcliente=?',[idcliente], (err, result)=>{
+router.get('/editUsuario/:idUsuario', (req,res)=>{
+    const idUsuario = req.params.idUsuario;
+    conexion.query('SELECT * FROM usuario WHERE idUsuario=?',[idUsuario], (err, result)=>{
         if(err){
             throw err;
         } else{
@@ -33,9 +33,9 @@ router.get('/editUsuario/:idcliente', (req,res)=>{
         }
     })
 })
-router.get('/deleteUsuario/:idcliente', (req,res)=>{
-    const idcliente = req.params.idcliente;
-    conexion.query('DELETE FROM usuario WHERE idcliente = ?',[idcliente], (err,result)=>{
+router.get('/deleteUsuario/:idUsuario', (req,res)=>{
+    const idUsuario = req.params.idUsuario;
+    conexion.query('DELETE FROM usuario WHERE idUsuario = ?',[idUsuario], (err,result)=>{
         if(err){
             throw err;
         } else{
@@ -46,11 +46,17 @@ router.get('/deleteUsuario/:idcliente', (req,res)=>{
 
 //Productos
 router.get('/consultaProducto', (req,res)=>{
-    conexion.query('SELECT * from producto', (err, result)=>{
+    conexion.query('SELECT * from producto1_v', (err, result1)=>{
         if(err){
             throw err;
         } else{
-            res.render('consultaProducto.ejs', {result:result});
+            conexion.query('SELECT * from producto2_v', (err, result2)=> {
+                if(err){
+                    throw err;
+                } else{
+                    res.render('consultaProducto.ejs', {result1: result1, result2:result2});
+                }
+            });
         }
     });
 });
@@ -59,23 +65,34 @@ router.get('/saveProducto', (req, res)=>{
 });
 router.post('/saveProducto', crud.saveProducto);
 router.post('/editProducto', crud.editProducto);
-router.get('/editProducto/:idproducto', (req,res)=>{
-    const idproducto = req.params.idproducto;
-    conexion.query('SELECT * FROM producto WHERE idproducto=?',[idproducto], (err, result)=>{
+router.get('/editProducto/:idProducto', (req,res)=>{
+    const idProducto = req.params.idProducto;
+    conexion.query('SELECT * FROM producto1_v WHERE idProducto=?',[idProducto], (err, result1)=>{
         if(err){
             throw err;
         } else{
-            res.render('editProducto.ejs', {producto:result[0]});
+            conexion.query('SELECT * FROM producto2_v WHERE idProducto=?',[idProducto], (err,result2)=>{
+                if (err)
+                    throw err;
+                else {
+                    res.render('editProducto.ejs', {producto1: result1[0], producto2: result2[0]});
+                }
+            });
         }
     })
 });
-router.get('/deleteProducto/:idproducto', (req,res)=>{
-    const idproducto = req.params.idproducto;
-    conexion.query('DELETE FROM producto WHERE idproducto = ?',[idproducto], (err,result)=>{
+router.get('/deleteProducto/:idProducto', (req,res)=>{
+    const idProducto = req.params.idProducto;
+    conexion.query('DELETE FROM producto1_v WHERE idProducto = ?',[idProducto], (err,result)=>{
         if(err){
             throw err;
         } else{
-            res.redirect('/consultaProducto');
+            conexion.query('DELETE FROM producto2_v WHERE idProducto = ?',[idProducto], (err,result)=>{
+                if (err)
+                    throw err;
+                else
+                    res.redirect('/consultaProducto');
+            });
         }
     });
 });
@@ -84,37 +101,46 @@ router.get('/deleteProducto/:idproducto', (req,res)=>{
 router.get('/consultaPedido', (req,res)=>{
     const usuariosQuery = 'SELECT * FROM pedido_usuario'; // Consulta de usuarios
     const productosQuery = 'SELECT * FROM pedido_producto'; // Consulta de productos
-    conexion.query('SELECT * from pedidos', (err, result)=>{
+    conexion.query('SELECT * from pedido1_h', (err, result1)=>{
         if(err){
             throw err;
         } else{
-            conexion.query(usuariosQuery,(err,resultU)=>{
-                if (err)
-                    throw err;
-                else{
-                    conexion.query(productosQuery,(err,resultP)=>{
-                        if(err)
-                            throw err;
-                        else
-                            res.render('consultaPedido.ejs', {result:result, resultP:resultP, resultU:resultU});
-                    });
-                }
+            conexion.query('SELECT * FROM pedido2_h', (err, result2)=>{
+                conexion.query(usuariosQuery,(err,resultU)=>{
+                    if (err)
+                        throw err;
+                    else{
+                        conexion.query(productosQuery,(err,resultP)=>{
+                            if(err)
+                                throw err;
+                            else
+                                res.render('consultaPedido.ejs', {result1:result1, result2:result2, resultP:resultP, resultU:resultU});
+                        });
+                    }
+                });
             });
         }
     });
 });
 router.get('/savePedido', (req, res) => {
     const usuariosQuery = 'SELECT * FROM usuario'; // Consulta de usuarios
-    const productosQuery = 'SELECT * FROM producto'; // Consulta de productos
+    const productosQuery1 = 'SELECT * FROM producto1_v'; // Consulta de productos
+    const productosQuery2 = 'SELECT * FROM producto2_v'; // Consulta de productos
     conexion.query(usuariosQuery, (err, resultU)=>{
         if (err){
             throw err;
         } else
-            conexion.query(productosQuery, (err, resultP)=>{
+            conexion.query(productosQuery1, (err, resultP1)=>{
                 if (err){
                     throw err;
-                } else
-                    res.render('altaPedido.ejs', {resultU:resultU, resultP:resultP});
+                } else{
+                    conexion.query(productosQuery2, (err, resultP2)=>{
+                        if (err)
+                            throw err;
+                        else
+                            res.render('altaPedido.ejs', {resultU:resultU, resultP1:resultP1, resultP2:resultP2});
+                    });
+                }
             })
     });
 

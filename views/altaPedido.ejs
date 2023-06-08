@@ -51,18 +51,22 @@
                     <input type="number" min="0" class="form-control" id="cantidad" name="cantidad" tabindex="2">
                 </div>
                 <div class="mb-3">
-                    <label for="idcliente" class="form-label">Id de usuario</label>
-                    <select id="idcliente" class="form-select" name="idcliente">
+                    <label for="idUsuario" class="form-label">Id de usuario</label>
+                    <select id="idUsuario" class="form-select" name="idUsuario">
                         <% resultU.forEach((usuario)=>{%>
-                            <option value="<%=usuario.idcliente%>" ><%=usuario.idcliente%> - <%=usuario.nombre%></option>
+                            <option value="<%=usuario.idUsuario%>" ><%=usuario.idUsuario%> - <%=usuario.nombre%></option>
                         <% }); %>
                     </select>
                 </div>
                 <div class="mb-3">
                     <label for="marca" class="form-label">Id de usuario</label>
-                    <select id="idproducto" class="form-select" name="idproducto">
-                        <% resultP.forEach((producto)=>{%>
-                        <option value="<%=producto.idproducto%>"><%=producto.idproducto%> - <%=producto.nombreProducto%> - <%=producto.marca%></option>
+                    <select id="idProducto" class="form-select" name="idProducto">
+                        <% resultP1.forEach((producto1_v)=>{%>
+                            <%resultP2.forEach((producto2_v)=>{%>
+                                <%if(producto1_v.idProducto == producto2_v.idProducto){%>
+                                    <option value="<%=producto1_v.idProducto%>"><%=producto1_v.idProducto%> - <%=producto1_v.nombreProducto%> - <%=producto2_v.marca%></option>
+                                <%}%>
+                            <%});%>
                         <% }); %>
                     </select>
                 </div>

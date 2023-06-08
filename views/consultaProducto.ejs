@@ -53,19 +53,23 @@
         </tr>
         </thead>
         <tbody>
-        <% result.forEach((producto)=> {%>
-            <tr>
-                <td><%= producto.idproducto%></td>
-                <td><%= producto.nombreProducto%></td>
-                <td><%= producto.precio%></td>
-                <td><%= producto.marca%></td>
-                <td><%= producto.cantidad%></td>
-                <td>
-                    <a href="/editProducto/<%= producto.idproducto%>" class="btn btn-outline-info">Editar</a>
-                    <a href="/deleteProducto/<%= producto.idproducto%>" class="btn btn-outline-danger">Borrar</a>
-                </td>
-            </tr>
-        <% }) %>
+        <% result1.forEach((producto1_v)=> {%>
+            <%result2.forEach((producto2_v)=>{%>
+                <%if(producto1_v.idProducto == producto2_v.idProducto){%>
+                    <tr>
+                        <td><%= producto1_v.idProducto%></td>
+                        <td><%= producto1_v.nombreProducto%></td>
+                        <td><%= producto1_v.precio%></td>
+                        <td><%= producto2_v.marca%></td>
+                        <td><%= producto2_v.cantidad%></td>
+                        <td>
+                            <a href="/editProducto/<%= producto1_v.idProducto%>" class="btn btn-outline-info">Editar</a>
+                            <a href="/deleteProducto/<%= producto1_v.idProducto%>" class="btn btn-outline-danger">Borrar</a>
+                        </td>
+                    </tr>
+                <%}%>
+            <%});%>
+        <% }); %>
         </tbody>
     </table>
 </div>

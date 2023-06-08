@@ -40,9 +40,10 @@
 <div class="container text-center">
     <!-- Content here -->
     <h1>TEST</h1>
-    <a href="/savePedido" class="btn btn-outline-info">Registrar pedido</a>
+    <a href="/savePedido" class="btn btn-outline-info">Consultar pedidos</a>
     <table class="table table-bordered table-striped text-center mt-4">
         <thead>
+        <H2>Fragmento Horizontal 1</H2>
         <tr class="bg-primary text-white">
             <th scope="col">ID</th>
             <th scope="col">Fecha de pedido</th>
@@ -52,20 +53,49 @@
         </tr>
         </thead>
         <tbody>
-        <% result.forEach((pedido)=> {%>
+        <% result1.forEach((pedido1_h)=> {%>
             <%resultU.forEach((pedido_usuario)=>{%>
                 <%resultP.forEach((pedido_producto)=>{%>
-                    <%if(pedido.idpedidos == pedido_usuario.idPedidos && pedido.idpedidos == pedido_producto.idPedidos){%>
+                    <%if(pedido1_h.idPedido == pedido_usuario.idPedido1 && pedido1_h.idPedido == pedido_producto.idPedido1){%>
                         <tr>
-                            <td><%= pedido.idpedidos%></td>
-                            <td><%= pedido.fecha_pedido%></td>
-                            <td><%= pedido.cantidad%></td>
-                            <td><%= pedido_usuario.idCliente%></td>
+                            <td><%= pedido1_h.idPedido%></td>
+                            <td><%= pedido1_h.fecha_pedido%></td>
+                            <td><%= pedido1_h.cantidad%></td>
+                            <td><%= pedido_usuario.idUsuario%></td>
                             <td><%= pedido_producto.idProducto%></td>
                         </tr>
                     <%}%>
                 <% }); %>
             <% }); %>
+        <% }); %>
+        </tbody>
+    </table>
+    <table class="table table-bordered table-striped text-center mt-4">
+        <thead>
+        <H2>Fragmento Horizontal 2</H2>
+        <tr class="bg-primary text-white">
+            <th scope="col">ID</th>
+            <th scope="col">Fecha de pedido</th>
+            <th scope="col">Cantidad comprada</th>
+            <th scope="col">ID cliente</th>
+            <th scope="col">ID producto</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% result2.forEach((pedido2_h)=> {%>
+        <%resultU.forEach((pedido_usuario)=>{%>
+        <%resultP.forEach((pedido_producto)=>{%>
+        <%if(pedido2_h.idPedido == pedido_usuario.idPedido2 && pedido2_h.idPedido == pedido_producto.idPedido2){%>
+            <tr>
+                <td><%= pedido2_h.idPedido%></td>
+                <td><%= pedido2_h.fecha_pedido%></td>
+                <td><%= pedido2_h.cantidad%></td>
+                <td><%= pedido_usuario.idUsuario%></td>
+                <td><%= pedido_producto.idProducto%></td>
+            </tr>
+        <%}%>
+        <% }); %>
+        <% }); %>
         <% }); %>
         </tbody>
     </table>

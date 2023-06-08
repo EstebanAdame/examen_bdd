@@ -37,26 +37,26 @@
     </div>
 </nav>
 
-<% if(producto){ %>
+<% if(producto1 && producto2){ %>
     <div class="container mt-4">
         <div class="card border-secondary">
             <div class="card-header">Editar registro</div>
             <div class="card-body">
                 <form action="/editProducto" method="POST">
-                    <input id="idproducto" name="idproducto" value="<%= producto.idproducto%>" hidden>
+                    <input id="idProducto" name="idProducto" value="<%= producto1.idProducto%>" hidden>
                     <div class="mb-3">
                         <label for="nombreProducto" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="nombreProducto" name="nombreProducto" value="<%= producto.nombreProducto%>" tabindex="1">
+                        <input type="text" class="form-control" id="nombreProducto" name="nombreProducto" value="<%= producto1.nombreProducto%>" tabindex="1">
                     </div>
                     <div class="mb-3">
                         <label for="precio" class="form-label">Precio</label>
-                        <input type="number" min="0" class="form-control" id="precio" name="precio" value="<%= producto.precio%>" tabindex="2">
+                        <input type="number" min="0" class="form-control" id="precio" name="precio" value="<%= producto1.precio%>" tabindex="2">
                     </div>
                     <div class="mb-3">
                         <label for="marca" class="form-label">Marca</label>
-                        <input type="text" class="form-control" id="marca" name="marca" value="<%= producto.marca%>" tabindex="3">
+                        <input type="text" class="form-control" id="marca" name="marca" value="<%= producto2.marca%>" tabindex="3">
                     </div>
-                    <input type="number" min="0" class="form-control" id="cantidad" name="cantidad" value="<%= producto.cantidad%>" tabindex="4" hidden>
+                    <input type="number" min="0" class="form-control" id="cantidad" name="cantidad" value="<%= producto2.cantidad%>" tabindex="4" hidden>
                     <button type="submit" class="btn btn-primary" tabindex="5">Guardar</button>
                     <a href="/consultaProducto" class="btn btn-secondary">Cancelar</a>
                 </form>

@@ -9,7 +9,7 @@ app.use(express.json());
 app.use('/', require('./router'));
 
 app.get('/', (req,res)=> {
-    res.send('Hola de Nuevo a Node JS + Express JS, Noe Guzman');
+    res.send('Hola de Nuevo a Node JS + Express JS');
 });
 
 app.listen(1337, ()=> {

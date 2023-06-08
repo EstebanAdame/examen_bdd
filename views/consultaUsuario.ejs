@@ -56,15 +56,15 @@
         <tbody>
         <% result.forEach((usuario)=> {%>
             <tr>
-                <td><%= usuario.idcliente%></td>
+                <td><%= usuario.idUsuario%></td>
                 <td><%= usuario.nombre%></td>
                 <td><%= usuario.apellidoPaterno%></td>
                 <td><%= usuario.apellidoMaterno%></td>
                 <td><%= usuario.correo%></td>
                 <td><%= usuario.estado%></td>
                 <td>
-                    <a href="/editUsuario/<%= usuario.idcliente%>" class="btn btn-outline-info">Editar</a>
-                    <a href="/deleteUsuario/<%= usuario.idcliente%>" class="btn btn-outline-danger">Borrar</a>
+                    <a href="/editUsuario/<%= usuario.idUsuario%>" class="btn btn-outline-info">Editar</a>
+                    <a href="/deleteUsuario/<%= usuario.idUsuario%>" class="btn btn-outline-danger">Borrar</a>
                 </td>
             </tr>
         <% }) %>

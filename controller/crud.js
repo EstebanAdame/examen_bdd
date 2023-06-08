@@ -21,20 +21,19 @@ exports.saveUsuario = (req,res)=>{
         res.redirect('/consultaUsuario');
     }
 }
-
 exports.editUsuario = (req,res)=>{
-    const idcliente = req.body.idcliente;
+    const idUsuario = req.body.idUsuario;
     const nombre = req.body.nombre;
     const apellidoPaterno = req.body.apellidoPaterno;
     const apellidoMaterno = req.body.apellidoMaterno;
     const correo = req.body.correo;
     const estado = req.body.estado;
-    conexion.query('UPDATE usuario SET ? WHERE idcliente = ?',[{nombre:nombre, apellidoPaterno:apellidoPaterno, apellidoMaterno:apellidoMaterno,
-        correo:correo, estado:estado}, idcliente], (error, result)=>{
+    conexion.query('UPDATE usuario SET ? WHERE idUsuario = ?',[{nombre:nombre, apellidoPaterno:apellidoPaterno, apellidoMaterno:apellidoMaterno,
+        correo:correo, estado:estado}, idUsuario], (error, result)=>{
         if (error){
             console.log(error);
         }else {
-            console.log(idcliente);
+            console.log(idUsuario);
             res.redirect('/consultaUsuario');
         }
     })
@@ -45,63 +44,75 @@ exports.saveProducto = (req,res)=>{
     const precio = req.body.precio;
     const marca = req.body.marca;
     const cantidad = req.body.cantidad;
-    conexion.query('INSERT INTO producto SET ?',{nombreProducto:nombreProducto, precio:precio, marca:marca, cantidad:cantidad},
-        (error, result)=>{
+    conexion.query('INSERT INTO producto1_v SET ?',{nombreProducto:nombreProducto, precio:precio}, (error, result1)=>{
         if (error){
             console.log(error);
         }else {
-            res.redirect('/consultaProducto');
-        }
-    })
+            const idProducto = result1.insertId;
+            conexion.query('INSERT INTO producto2_v SET ?',{idProducto:idProducto, marca: marca, cantidad:cantidad }, (error, result1)=> {
+                if (error)
+                    throw error;
+                else
+                    res.redirect('/consultaProducto');
+            });}
+    });
 }
 
 exports.editProducto = (req,res)=>{
-    const idproducto = req.body.idproducto;
+    const idProducto = req.body.idProducto;
     const nombreProducto = req.body.nombreProducto;
     const precio = req.body.precio;
     const marca = req.body.marca;
     const cantidad = req.body.cantidad;
-    conexion.query('UPDATE producto SET ? WHERE idproducto = ?',[{nombreProducto:nombreProducto, precio:precio, marca:marca,
-    cantidad:cantidad}, idproducto], (error, result)=>{
-        if (error){
+    conexion.query('UPDATE producto1_v SET ? WHERE idProducto = ?',[{nombreProducto:nombreProducto, precio:precio}, idProducto], (error, result)=>{
+        if (error)
             console.log(error);
-        }else {
-            console.log(idproducto);
-            res.redirect('/consultaProducto');
+        else {
+            console.log(result);
+            conexion.query('UPDATE producto2_v SET ? WHERE idProducto = ?',[{marca:marca, cantidad:cantidad}, idProducto], (error, result)=> {
+                if(error)
+                    throw error;
+                else
+                    console.log(result);
+                    res.redirect('/consultaProducto');
+            });
         }
-    })
+    });
 }
 
-exports.savePedido = (req,res)=>{
+exports.savePedido = (req,res)=> {
     const fecha_pedido = req.body.fecha_pedido;
     const cantidad = req.body.cantidad;
-    const idcliente = req.body.idcliente;
-    const idproducto = req.body.idproducto;
-    conexion.query('INSERT INTO pedidos SET ?',{fecha_pedido:fecha_pedido, cantidad:cantidad},
-        (error, result1)=>{
-            if (error){
-                console.log(error);
-            }else {
-                const idpedidos = result1.insertId;
-                conexion.query('INSERT INTO pedido_usuario SET ?',{idpedidos:idpedidos, idcliente:idcliente}, (err, result)=>{
-                    if(error){
+    const idUsuario = req.body.idUsuario;
+    const idProducto = req.body.idProducto;
+    console.log(idProducto);
+
+    if (cantidad < 3) {
+        conexion.query('INSERT INTO pedido1_h SET ?', {
+            fecha_pedido: fecha_pedido,
+            cantidad: cantidad
+        }, (err, result) => {
+            if (err)
+                console.log(err);
+            else {
+                const idPedido1 = result.insertId;
+                conexion.query('INSERT INTO pedido_usuario SET ?', {idPedido1: idPedido1, idUsuario: idUsuario}, (err, result) => {
+                    if (err)
                         console.log(err);
-                    } else{
-                        conexion.query('INSERT INTO pedido_producto SET ?',{idpedidos:idpedidos, idproducto:idproducto}, (err, result)=>{
-                            if(err)
+                    else {
+                        conexion.query('INSERT INTO pedido_producto SET ?', {idPedido1: idPedido1, idProducto: idProducto}, (err, result) => {
+                            if (err)
                                 console.log(err);
                             else {
-                                conexion.query('SELECT cantidad FROM producto WHERE idproducto = ?',[idproducto],(err,result4)=>{
+                                conexion.query('SELECT cantidad FROM producto2_v WHERE idProducto = ?', [idProducto], (err, result4) => {
                                     if (err)
                                         console.log(err)
-                                    else{
-                                        console.log(result4);
+                                    else {
                                         stock = result4[0].cantidad;
                                         console.log(stock);
                                         stock = stock - cantidad;
                                         console.log(stock);
-
-                                        conexion.query('UPDATE producto SET cantidad = ? WHERE idproducto = ?',[stock, idproducto], (err,result)=>{
+                                        conexion.query('UPDATE producto2_v SET cantidad = ? WHERE idProducto = ?', [stock, idProducto], (err, result) => {
                                             if (err)
                                                 console.log(err);
                                             else
@@ -112,8 +123,53 @@ exports.savePedido = (req,res)=>{
                             }
                         });
                     }
-
                 });
             }
         });
+    } else {
+        conexion.query('INSERT INTO pedido2_h SET ?', {
+            fecha_pedido: fecha_pedido,
+            cantidad: cantidad
+        }, (err, result) => {
+            if (err)
+                console.log(err);
+            else {
+                const idPedido2 = result.insertId;
+                conexion.query('INSERT INTO pedido_usuario SET ?', {
+                    idPedido2: idPedido2,
+                    idUsuario: idUsuario
+                }, (err, result) => {
+                    if (err)
+                        console.log(err);
+                    else {
+                        conexion.query('INSERT INTO pedido_producto SET ?', {
+                            idPedido2: idPedido2,
+                            idProducto: idProducto
+                        }, (err, result) => {
+                            if (err)
+                                console.log(err);
+                            else {
+                                conexion.query('SELECT cantidad FROM producto2_v WHERE idProducto = ?', [idProducto], (err, result4) => {
+                                    if (err)
+                                        console.log(err)
+                                    else {
+                                        stock = result4[0].cantidad;
+                                        console.log(stock);
+                                        stock = stock - cantidad;
+                                        console.log(stock);
+                                        conexion.query('UPDATE producto2_v SET cantidad = ? WHERE idProducto = ?', [stock, idProducto], (err, result) => {
+                                            if (err)
+                                                console.log(err);
+                                            else
+                                                res.redirect('/consultaPedido');
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
 }
