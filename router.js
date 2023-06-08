@@ -1,6 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const conexion = require('./database/db');
+const conexion1 = require('./database/nodo1');
+const conexion2 = require('./database/nodo2');
+const conexion3 = require('./database/nodo3');
+
+
+
 const crud = require('./controller/crud');
 
 
@@ -10,7 +15,7 @@ router.get('/', (req,res)=>{
 
 //Usuarios
 router.get('/consultaUsuario', (req,res)=>{
-    conexion.query('SELECT * from usuario', (err, result)=>{
+    conexion1.query('SELECT * from usuario', (err, result)=>{
         if(err){
             throw err;
         } else{
@@ -25,7 +30,7 @@ router.post('/saveUsuario', crud.saveUsuario);
 router.post('/editUsuario', crud.editUsuario);
 router.get('/editUsuario/:idUsuario', (req,res)=>{
     const idUsuario = req.params.idUsuario;
-    conexion.query('SELECT * FROM usuario WHERE idUsuario=?',[idUsuario], (err, result)=>{
+    conexion1.query('SELECT * FROM usuario WHERE idUsuario=?',[idUsuario], (err, result)=>{
         if(err){
             throw err;
         } else{
@@ -35,7 +40,7 @@ router.get('/editUsuario/:idUsuario', (req,res)=>{
 })
 router.get('/deleteUsuario/:idUsuario', (req,res)=>{
     const idUsuario = req.params.idUsuario;
-    conexion.query('DELETE FROM usuario WHERE idUsuario = ?',[idUsuario], (err,result)=>{
+    conexion1.query('DELETE FROM usuario WHERE idUsuario = ?',[idUsuario], (err,result)=>{
         if(err){
             throw err;
         } else{
@@ -46,11 +51,11 @@ router.get('/deleteUsuario/:idUsuario', (req,res)=>{
 
 //Productos
 router.get('/consultaProducto', (req,res)=>{
-    conexion.query('SELECT * from producto1_v', (err, result1)=>{
+    conexion3.query('SELECT * from producto1_v', (err, result1)=>{
         if(err){
             throw err;
         } else{
-            conexion.query('SELECT * from producto2_v', (err, result2)=> {
+            conexion1.query('SELECT * from producto2_v', (err, result2)=> {
                 if(err){
                     throw err;
                 } else{
@@ -67,11 +72,11 @@ router.post('/saveProducto', crud.saveProducto);
 router.post('/editProducto', crud.editProducto);
 router.get('/editProducto/:idProducto', (req,res)=>{
     const idProducto = req.params.idProducto;
-    conexion.query('SELECT * FROM producto1_v WHERE idProducto=?',[idProducto], (err, result1)=>{
+    conexion3.query('SELECT * FROM producto1_v WHERE idProducto=?',[idProducto], (err, result1)=>{
         if(err){
             throw err;
         } else{
-            conexion.query('SELECT * FROM producto2_v WHERE idProducto=?',[idProducto], (err,result2)=>{
+            conexion1.query('SELECT * FROM producto2_v WHERE idProducto=?',[idProducto], (err,result2)=>{
                 if (err)
                     throw err;
                 else {
@@ -83,11 +88,11 @@ router.get('/editProducto/:idProducto', (req,res)=>{
 });
 router.get('/deleteProducto/:idProducto', (req,res)=>{
     const idProducto = req.params.idProducto;
-    conexion.query('DELETE FROM producto1_v WHERE idProducto = ?',[idProducto], (err,result)=>{
+    conexion3.query('DELETE FROM producto1_v WHERE idProducto = ?',[idProducto], (err,result)=>{
         if(err){
             throw err;
         } else{
-            conexion.query('DELETE FROM producto2_v WHERE idProducto = ?',[idProducto], (err,result)=>{
+            conexion1.query('DELETE FROM producto2_v WHERE idProducto = ?',[idProducto], (err,result)=>{
                 if (err)
                     throw err;
                 else
@@ -101,16 +106,16 @@ router.get('/deleteProducto/:idProducto', (req,res)=>{
 router.get('/consultaPedido', (req,res)=>{
     const usuariosQuery = 'SELECT * FROM pedido_usuario'; // Consulta de usuarios
     const productosQuery = 'SELECT * FROM pedido_producto'; // Consulta de productos
-    conexion.query('SELECT * from pedido1_h', (err, result1)=>{
+    conexion2.query('SELECT * from pedido1_h', (err, result1)=>{
         if(err){
             throw err;
         } else{
-            conexion.query('SELECT * FROM pedido2_h', (err, result2)=>{
-                conexion.query(usuariosQuery,(err,resultU)=>{
+            conexion3.query('SELECT * FROM pedido2_h', (err, result2)=>{
+                conexion2.query(usuariosQuery,(err,resultU)=>{
                     if (err)
                         throw err;
                     else{
-                        conexion.query(productosQuery,(err,resultP)=>{
+                        conexion3.query(productosQuery,(err,resultP)=>{
                             if(err)
                                 throw err;
                             else
@@ -126,15 +131,15 @@ router.get('/savePedido', (req, res) => {
     const usuariosQuery = 'SELECT * FROM usuario'; // Consulta de usuarios
     const productosQuery1 = 'SELECT * FROM producto1_v'; // Consulta de productos
     const productosQuery2 = 'SELECT * FROM producto2_v'; // Consulta de productos
-    conexion.query(usuariosQuery, (err, resultU)=>{
+    conexion1.query(usuariosQuery, (err, resultU)=>{
         if (err){
             throw err;
         } else
-            conexion.query(productosQuery1, (err, resultP1)=>{
+            conexion3.query(productosQuery1, (err, resultP1)=>{
                 if (err){
                     throw err;
                 } else{
-                    conexion.query(productosQuery2, (err, resultP2)=>{
+                    conexion2.query(productosQuery2, (err, resultP2)=>{
                         if (err)
                             throw err;
                         else

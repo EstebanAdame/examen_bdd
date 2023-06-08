@@ -1,4 +1,6 @@
-const conexion = require('../database/db');
+const conexion1 = require('../database/nodo1');
+const conexion2 = require('../database/nodo2');
+const conexion3 = require('../database/nodo3');
 
 exports.saveUsuario = (req,res)=>{
     const nombre = req.body.nombre;
@@ -7,7 +9,7 @@ exports.saveUsuario = (req,res)=>{
     const correo = req.body.correo;
     const estado = req.body.estado;
     if(nombre!="" && apellidoPaterno!="" && apellidoMaterno!="" && correo!="" && estado!=""){
-        conexion.query('INSERT INTO usuario SET ?',{nombre:nombre, apellidoPaterno:apellidoPaterno, apellidoMaterno:apellidoMaterno,
+        conexion1.query('INSERT INTO usuario SET ?',{nombre:nombre, apellidoPaterno:apellidoPaterno, apellidoMaterno:apellidoMaterno,
             correo:correo, estado:estado}, (error, result)=>{
             if (error){
                 console.log(error);
@@ -28,7 +30,7 @@ exports.editUsuario = (req,res)=>{
     const apellidoMaterno = req.body.apellidoMaterno;
     const correo = req.body.correo;
     const estado = req.body.estado;
-    conexion.query('UPDATE usuario SET ? WHERE idUsuario = ?',[{nombre:nombre, apellidoPaterno:apellidoPaterno, apellidoMaterno:apellidoMaterno,
+    conexion1.query('UPDATE usuario SET ? WHERE idUsuario = ?',[{nombre:nombre, apellidoPaterno:apellidoPaterno, apellidoMaterno:apellidoMaterno,
         correo:correo, estado:estado}, idUsuario], (error, result)=>{
         if (error){
             console.log(error);
@@ -44,12 +46,12 @@ exports.saveProducto = (req,res)=>{
     const precio = req.body.precio;
     const marca = req.body.marca;
     const cantidad = req.body.cantidad;
-    conexion.query('INSERT INTO producto1_v SET ?',{nombreProducto:nombreProducto, precio:precio}, (error, result1)=>{
+    conexion3.query('INSERT INTO producto1_v SET ?',{nombreProducto:nombreProducto, precio:precio}, (error, result1)=>{
         if (error){
             console.log(error);
         }else {
             const idProducto = result1.insertId;
-            conexion.query('INSERT INTO producto2_v SET ?',{idProducto:idProducto, marca: marca, cantidad:cantidad }, (error, result1)=> {
+            conexion1.query('INSERT INTO producto2_v SET ?',{idProducto:idProducto, marca: marca, cantidad:cantidad }, (error, result1)=> {
                 if (error)
                     throw error;
                 else
@@ -64,12 +66,12 @@ exports.editProducto = (req,res)=>{
     const precio = req.body.precio;
     const marca = req.body.marca;
     const cantidad = req.body.cantidad;
-    conexion.query('UPDATE producto1_v SET ? WHERE idProducto = ?',[{nombreProducto:nombreProducto, precio:precio}, idProducto], (error, result)=>{
+    conexion3.query('UPDATE producto1_v SET ? WHERE idProducto = ?',[{nombreProducto:nombreProducto, precio:precio}, idProducto], (error, result)=>{
         if (error)
             console.log(error);
         else {
             console.log(result);
-            conexion.query('UPDATE producto2_v SET ? WHERE idProducto = ?',[{marca:marca, cantidad:cantidad}, idProducto], (error, result)=> {
+            conexion1.query('UPDATE producto2_v SET ? WHERE idProducto = ?',[{marca:marca, cantidad:cantidad}, idProducto], (error, result)=> {
                 if(error)
                     throw error;
                 else
@@ -88,7 +90,7 @@ exports.savePedido = (req,res)=> {
     console.log(idProducto);
 
     if (cantidad < 3) {
-        conexion.query('INSERT INTO pedido1_h SET ?', {
+        conexion2.query('INSERT INTO pedido1_h SET ?', {
             fecha_pedido: fecha_pedido,
             cantidad: cantidad
         }, (err, result) => {
@@ -96,15 +98,15 @@ exports.savePedido = (req,res)=> {
                 console.log(err);
             else {
                 const idPedido1 = result.insertId;
-                conexion.query('INSERT INTO pedido_usuario SET ?', {idPedido1: idPedido1, idUsuario: idUsuario}, (err, result) => {
+                conexion2.query('INSERT INTO pedido_usuario SET ?', {idPedido1: idPedido1, idUsuario: idUsuario}, (err, result) => {
                     if (err)
                         console.log(err);
                     else {
-                        conexion.query('INSERT INTO pedido_producto SET ?', {idPedido1: idPedido1, idProducto: idProducto}, (err, result) => {
+                        conexion3.query('INSERT INTO pedido_producto SET ?', {idPedido1: idPedido1, idProducto: idProducto}, (err, result) => {
                             if (err)
                                 console.log(err);
                             else {
-                                conexion.query('SELECT cantidad FROM producto2_v WHERE idProducto = ?', [idProducto], (err, result4) => {
+                                conexion1.query('SELECT cantidad FROM producto2_v WHERE idProducto = ?', [idProducto], (err, result4) => {
                                     if (err)
                                         console.log(err)
                                     else {
@@ -112,7 +114,7 @@ exports.savePedido = (req,res)=> {
                                         console.log(stock);
                                         stock = stock - cantidad;
                                         console.log(stock);
-                                        conexion.query('UPDATE producto2_v SET cantidad = ? WHERE idProducto = ?', [stock, idProducto], (err, result) => {
+                                        conexion1.query('UPDATE producto2_v SET cantidad = ? WHERE idProducto = ?', [stock, idProducto], (err, result) => {
                                             if (err)
                                                 console.log(err);
                                             else
@@ -127,7 +129,7 @@ exports.savePedido = (req,res)=> {
             }
         });
     } else {
-        conexion.query('INSERT INTO pedido2_h SET ?', {
+        conexion3.query('INSERT INTO pedido2_h SET ?', {
             fecha_pedido: fecha_pedido,
             cantidad: cantidad
         }, (err, result) => {
@@ -135,21 +137,21 @@ exports.savePedido = (req,res)=> {
                 console.log(err);
             else {
                 const idPedido2 = result.insertId;
-                conexion.query('INSERT INTO pedido_usuario SET ?', {
+                conexion2.query('INSERT INTO pedido_usuario SET ?', {
                     idPedido2: idPedido2,
                     idUsuario: idUsuario
                 }, (err, result) => {
                     if (err)
                         console.log(err);
                     else {
-                        conexion.query('INSERT INTO pedido_producto SET ?', {
+                        conexion3.query('INSERT INTO pedido_producto SET ?', {
                             idPedido2: idPedido2,
                             idProducto: idProducto
                         }, (err, result) => {
                             if (err)
                                 console.log(err);
                             else {
-                                conexion.query('SELECT cantidad FROM producto2_v WHERE idProducto = ?', [idProducto], (err, result4) => {
+                                conexion1.query('SELECT cantidad FROM producto2_v WHERE idProducto = ?', [idProducto], (err, result4) => {
                                     if (err)
                                         console.log(err)
                                     else {
@@ -157,7 +159,7 @@ exports.savePedido = (req,res)=> {
                                         console.log(stock);
                                         stock = stock - cantidad;
                                         console.log(stock);
-                                        conexion.query('UPDATE producto2_v SET cantidad = ? WHERE idProducto = ?', [stock, idProducto], (err, result) => {
+                                        conexion1.query('UPDATE producto2_v SET cantidad = ? WHERE idProducto = ?', [stock, idProducto], (err, result) => {
                                             if (err)
                                                 console.log(err);
                                             else
